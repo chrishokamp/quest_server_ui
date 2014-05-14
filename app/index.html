@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>Quest Server</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -23,8 +23,9 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    <!-- Add your site or application content here -->
-    <div class="container" ng-include="&#x27;views/main.html&#x27;" ng-controller="MainCtrl"></div>
+    <body ng-app="editorComponentsApp">
+
+    <div class="container" ui-view></div>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
      <script>
@@ -68,9 +69,19 @@
     <!-- endbower -->
     <!-- endbuild -->
 
-        <!-- build:js({.tmp,app}) scripts/scripts.js -->
-        <script src="scripts/app.js"></script>
-        <script src="scripts/controllers/main.js"></script>
-        <!-- endbuild -->
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="bower_components/angular-ui-bootstrap/dist/ui-bootstrap-tpls-0.10.0.js"></script>
+
+    <script src="scripts/app.js"></script>
+
+    <script src="scripts/services.js"></script>
+
+    <script src="scripts/directives.js"></script>
+
+    <script src="scripts/controllers.js"></script>
+    <script src="scripts/fileUpload/fileUpload.js"></script>
+    <!-- endbuild -->
+
+
 </body>
 </html>
