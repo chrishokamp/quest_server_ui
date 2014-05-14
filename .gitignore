@@ -5,3 +5,4 @@ dist
 .sass-cache
 .css
 heroku_app
+app/bower_components
