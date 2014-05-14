@@ -320,6 +320,14 @@ module.exports = function (grunt) {
           cwd: '<%= yeoman.app %>',
           // TODO: fix the dist path here
 //          dest: '<%= yeoman.dist %>/fonts',
+          dest: '<%= yeoman.dist %>/bower_components/ionicons/fonts/',
+          src: ['bower_components/ionicons/fonts/*.*']
+       },{
+          expand: true,
+          flatten: true,
+          cwd: '<%= yeoman.app %>',
+          // TODO: fix the dist path here
+//          dest: '<%= yeoman.dist %>/fonts',
           dest: '<%= yeoman.dist %>/bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/',
           src: ['bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/*.*']
         }]
@@ -422,13 +430,13 @@ module.exports = function (grunt) {
     'cdnify',
     'cssmin',
     'uglify',
-    'rev',
+//    'rev',
     'usemin',
     'htmlmin'
   ]);
 
   grunt.registerTask('default', [
-    'newer:jshint',
+//    'newer:jshint',
     'test',
     'build'
   ]);
