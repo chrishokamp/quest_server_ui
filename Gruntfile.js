@@ -314,6 +314,14 @@ module.exports = function (grunt) {
           cwd: '.tmp/images',
           dest: '<%= yeoman.dist %>/images',
           src: ['generated/*']
+        }, {
+          expand: true,
+          flatten: true,
+          cwd: '<%= yeoman.app %>',
+          // TODO: fix the dist path here
+//          dest: '<%= yeoman.dist %>/fonts',
+          dest: '<%= yeoman.dist %>/bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/',
+          src: ['bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/*.*']
         }]
       },
       styles: {
@@ -323,7 +331,6 @@ module.exports = function (grunt) {
         src: '{,*/}*.css'
       }
     },
-
     // Run some tasks in parallel to speed up the build process
     concurrent: {
       server: [
