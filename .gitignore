@@ -3,5 +3,7 @@ node_modules
 .tmp
 .sass-cache
 .css
+dist
 heroku_app
+github_site
 app/bower_components
