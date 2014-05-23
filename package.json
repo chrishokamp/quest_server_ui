@@ -1,7 +1,10 @@
 {
   "name": "questserver",
   "version": "0.0.0",
-  "dependencies": {},
+  "dependencies": {
+    "formidable": "^1.0.14",
+    "express-logger": "0.0.3"
+  },
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-autoprefixer": "~0.4.0",
