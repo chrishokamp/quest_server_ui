@@ -9,6 +9,7 @@ var gzippo = require('gzippo')
   , connectTimeout = require('connect-timeout')
   , formidable = require('formidable')
   , msTranslator = require('./translate')
+  , questClient = require('./questConnector')
   , app = express();
 
 
@@ -227,9 +228,9 @@ app.get('/features', function(req, res){
     , target = req.query.target;
 
   if (target) {
-
     res.type('text/plain');
     res.send('TARGET SUPPLIED');
+
   } else {
     var params = {
       to: to,
@@ -237,14 +238,16 @@ app.get('/features', function(req, res){
       text: source
     };
     var trans = msTranslator.translate(params)
-    trans.then(function(target) {
+    trans
+      .then(function(target) {
         // get the features
-
-        console.log("FEATURES: " + target);
+        return questClient.features(to, from, source, target);
+      })
+     .then(function(features) {
+        console.log("FEATURES: " + features);
         res.type('text/plain');
-        res.send()
-    });
-
+        res.send(features)
+     })
   }
   // TODO: get the source and target of the segment, calculate the features and send for prediction
 });

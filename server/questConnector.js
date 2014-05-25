@@ -6,12 +6,6 @@ var deferred = q.defer();
  // Creates an XML-RPC client. Passes the host information on where to
   // make the XML-RPC calls.
 var client = xmlrpc.createClient({ host: '143.167.8.76', port: 35722, path: '/' });
-//  // Sends a method call to the XML-RPC server
-//  client.methodCall('anAction', ['aParam'], function (error, value) {
-//    // Results of the method response
-//    console.log('Method response for \'anAction\': ' + value)
-//  })
-
 
 // TODO: use a nice wrapper of node http lib
 
@@ -22,17 +16,16 @@ var questClient = {
 
     var segPair = "this is a test\tdies ist ein test";
     client.methodCall('runQuest.getFeatures', [segPair], function (error, value) {
-      if (error) console.log(error);
+      if (error) {
+        console.log(error);
+        return error;
+      }
 
       console.log('Quest returned: ' + value);
-    //    // Results of the method response
-    //    console.log('Method response for \'anAction\': ' + value)
-    //  })
+      deferred.resolve(value);
     });
-
+    return deferred.promise;
   }
-//        deferred.resolve(data);
-//    return deferred.promise;
 }
 
 module.exports = questClient;
