@@ -8,10 +8,9 @@ var gzippo = require('gzippo')
   , logger = require('express-logger')
   , connectTimeout = require('connect-timeout')
   , formidable = require('formidable')
-  , localConfig = require('./localConfig')
+  , msTranslator = require('./translate')
   , app = express();
 
-// localConfig contains bingId and bingSecret
 
 app.use(bodyParser());
 app.use(cors());
@@ -20,8 +19,9 @@ params.extend(app);
 
 app.use(logger({path: "logfile.txt"}));
 
-var timeout = connectTimeout({ time: 10000 });
-app.use(timeout);
+// set a global timeout
+//var timeout = connectTimeout({ time: 10000 });
+//app.use(timeout);
 //var longTimeout = connectTimeout({ time: 45000 });
 
 
@@ -181,6 +181,44 @@ app.get('/segment/:lang', function(req, res){
   res.type('text/plain');
   res.send('Meadowlark Travel');
 });
+
+//var params = {
+//  text: 'How\'s it going?'
+//  , from: 'en'
+//  , to: 'es'
+//};
+//req.query.color
+// http://localhost:3333/translate?from=en&to=de&text=I%20want%20to%20go%20home
+// working - return a promise
+app.get('/translate', function(req, res){
+  var params = {
+    from: req.query.from,
+    to: req.query.to,
+    text: req.query.text
+  }
+  console.log(params);
+  // TODO: get the source and target of the segment, calculate the features and send for prediction
+
+  var transResult = msTranslator.translate(params);
+  transResult.then(
+    function(data) {
+      console.log('data: ' + data);
+      res.type('text/plain');
+      res.send(data);
+    }
+  );
+
+});
+
+// params
+//var params = {
+//  text: 'How\'s it going?'
+//  , from: 'en'
+//  , to: 'es'
+//};
+
+// translator.translate(params, callback)
+
 
 // for hosting the app using express
 // app.use(gzippo.staticGzip("" + __dirname + "/dist"));

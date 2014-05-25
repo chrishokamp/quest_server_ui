@@ -10,5 +10,9 @@
   "license": "MIT",
   "devDependencies": {
     "mocha": "^1.19.0"
+  },
+  "dependencies": {
+    "mstranslator": "^0.1.6",
+    "q": "^1.0.1"
   }
 }

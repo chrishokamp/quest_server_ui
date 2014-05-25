@@ -2,7 +2,7 @@ node_modules
 .idea
 .tmp
 .sass-cache
-.css
+*.css
 logfile.txt
 dist
 heroku_app
