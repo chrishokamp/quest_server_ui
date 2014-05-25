@@ -1,0 +1,14 @@
+{
+  "name": "quest_server",
+  "version": "0.0.1",
+  "description": "a frontend for the QuEst MT quality estimation framework",
+  "main": "rest.js",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "author": "Chris Hokamp",
+  "license": "MIT",
+  "devDependencies": {
+    "mocha": "^1.19.0"
+  }
+}

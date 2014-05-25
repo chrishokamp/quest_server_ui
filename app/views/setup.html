@@ -42,6 +42,7 @@
         <ul class="nav nav-pills pull-right">
             <li class="active"><a ng-href="#">Home</a></li>
             <li><a ng-href="#">About</a></li>
+            <li><a ng-href="#">References</a></li>
             <li><a ng-href="#">Contact</a></li>
         </ul>
         <h3 class="text-muted">Quest In the Cloud</h3>
@@ -61,18 +62,18 @@
                         <div class="col-xs-offset-1 col-xs-4 text-center">
                             <label for="source-lang">Source Language</label>
                             <select id="source-lang" class="form-control" name="source-lang">
-                                <option value="en">English</option>
-                                <option value="es">Spanish</option>
                                 <option value="de">German</option>
+                                <option value="en" disabled="true">English</option>
+                                <option value="es" disabled="true">Spanish</option>
 
                             </select>
                         </div>
                         <div class="col-xs-offset-2 col-xs-4 text-center">
                             <label for="target-lang">Target Language</label>
                             <select  id="target-lang" class="form-control" name="source-lang">
-                                <option value="es">Spanish</option>
                                 <option value="en">English</option>
-                                <option value="de">German</option>
+                                <option value="es" disabled="true">Spanish</option>
+                                <option value="de" disabled="true">German</option>
                             </select>
                         </div>
                             <!--<select name=“lang_pair” value="options">-->

@@ -1,6 +1,11 @@
 body {
   background-image:url('../images/ricepaper.png');
   background-color: #505557;
+
+  // minimum supported widths
+   min-width: 780px; /* the minimum page width */
+   width: auto !important;  /* Firefox will set width as auto */
+   width:780px;             /* As IE ignores !important it will set width as 1000px; */
 }
 
 .configuration-tabs {
