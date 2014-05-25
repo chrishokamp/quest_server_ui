@@ -73,82 +73,7 @@ app.post('/upload', function(req, res){
 // the XMLRPC server exposes the name 'runQuest', and all java functions can be called from there
 
 // from https://github.com/kashifshah/QuEstClient_v1/blob/master/callQuEst.php#L110-L132
-//    echo "file uploaded";
-//        	$file = file_get_contents($_FILES['file']['tmp_name'], true);
-//        	$input = explode("\n", $file); // dividing the file into lines
-//			$translated = "";
-//
-//    		//$file = file_get_contents('./input_quest_de.txt', true); // Reading input file
-//    		//$input = explode("\n", $file); // dividing the file into lines
-//    		foreach ($input as $inputline) {
-//    			if(!empty($inputline)){
-//				//echo $inputline;
 //    				//$inputt = iconv(mb_detect_encoding($inputline), 'UTF-8', $inputline);
-//    				$inputt = mb_convert_encoding($inputline, 'UTF-8',mb_detect_encoding($inputline, 'UTF-8, ISO-8859-1', true));
-//				$translated .= getBing($inputt);
-//    				//$translated .= "$translated\r\n";
-//    				//echo $translated;
-//        			flush();
-//        		}
-//			}
-//		echo "<pre>$translated</pre>";
-//		session_start();
-//		$_SESSION['trans'] = $translated;
-//
-//		echo "<br><br>"
-
-// getBing function - https://github.com/kashifshah/QuEstClient_v1/blob/master/callQuEst.php#L6-L56
-//function getBing($content){
-//
-//		//	echo $content;
-//
-//            // specify the data to pass to QuEST and load it (taking whatever is passed to this page as the data)
-//				try{
-//
-//					$post_data = $content;
-//					require_once('ripcord.php'); // function library
-//					$client = ripcord::xmlrpcClient("http://143.167.8.76:35722"); // server listening at this address
-//
-//               	}
-//               	catch (Exception $e) {
-//			    	echo 'Caught exception: ',  $e->getMessage(), "\n";
-//				}
-//
-//
-//				try{
-//                                    $translatedString  = $client->runQuest->getTranslation($post_data);
-//                                    //$translatedString  = $client->runQuest2->Test($post_data);
-//				}catch (Exception $e) {
-//			    	echo 'Caught exception: ',  $e->getMessage(), "\n";
-//				}
-//
-//               // $translatedString  = $client->runQuest->getTranslation($post_data);
-//                //echo "<pre> $translatedString </pre>", "<br>" ;
-//               // echo $translatedString, "<br>";
-//                $output = explode("\t", "$translatedString");
-//
-//              //  echo "<font color=#ff0000>$output[0]</font>", "<tab>";
-//              //  echo "<font color=green>$output[1]</font>", "<br>";
-//
-//                if (ob_get_level() == 0) ob_start();
-//
-//                echo "<table  border=0 width=100%>\n";
-//                echo "<tr>\n"
-//                ."<td width=40%> $output[0]</td>"
-//                ."<td width=40%> $output[1]</td>"
-//    			."</tr>\n";
-//
-//    			 echo '</table>';
-//    			 ob_flush();
-//    			 flush();
-//    			 usleep(50000);
-//                ob_end_flush();
-//               // flush();
-//                //return "$translatedString";
-//                $ao = trim($output[0]). "\t" .trim($output[1]). "\n";
-//                return $ao;
-//
-//}
 
 // in kashif's code, the $_SESSION['trans'] is expected to be set from the previous call
 // php uses session_start(); for this, then you have $SESSION
@@ -176,6 +101,7 @@ app.post('/upload', function(req, res){
 //			}
 //
 //		?>
+
 
 // working notes
 // callQuEst.php - the normal flow
@@ -252,27 +178,73 @@ app.get('/features', function(req, res){
   // TODO: get the source and target of the segment, calculate the features and send for prediction
 });
 
-
-// params
-//var params = {
-//  text: 'How\'s it going?'
-//  , from: 'en'
-//  , to: 'es'
-//};
-
-// translator.translate(params, callback)
-
-
 // for hosting the app using express
 // app.use(gzippo.staticGzip("" + __dirname + "/dist"));
 
-// ROUTES
-// /translate
-// - bing for now
-
-// /features
-
 // /predict (can use chained promise(?), because it uses the features from the /feature route
+// paths which require chained calls
+app.get('/predict', function(req, res){
+  // only get the translation if we don't have the target
+  var from = req.query.from
+    , to = req.query.to
+    , source = req.query.source
+    , target = req.query.target;
+
+  if (target) {
+    res.type('text/plain');
+    res.send('TARGET SUPPLIED');
+
+  } else {
+    var params = {
+      to: to,
+      from: from,
+      text: source
+    };
+    var trans = msTranslator.translate(params)
+    trans
+      .then(function(target) {
+        // get the prediction directly
+        // TODO: change the signature so that the backend exposes the ml component directly
+        return questClient.features(to, from, source, target);
+      })
+     .then(function(features) {
+        console.log("FEATURES: " + features);
+
+        res.type('text/plain');
+        res.send(features)
+     })
+  }
+  // TODO: get the source and target of the segment, calculate the features and send for prediction
+});
+
+//     String l_src = getsrcLanguage();
+//
+//        ClientQuEst client = null;
+//        ClientLearn learn = null;
+//        int qcp = Integer.parseInt(resourceManager.getString("quest.port"));
+//        int qlp = Integer.parseInt(resourceManager.getString("learn.port"));
+//
+//
+//        if (l_src.equals("de")){
+//             client = new ClientQuEst("localhost", 7773, false);
+//             learn = new ClientLearn("localhost", 7774, false);
+//        }else if (l_src.equals(Language.FRENCH)) {
+//            client = new ClientQuEst("localhost", 8883, false);
+//            learn = new ClientLearn("localhost", 8884, false);
+//        }else{
+//            System.out.println("Language not supported");
+//            return 0;
+//        }
+//
+//
+//        //ClientQuEst client = new ClientQuEst("localhost", 7773, false);
+//        String m = client.getFeatures(src, tgt);
+//
+//        double pred = learn.getPredictions(m);
+//
+//        String all_pred =  src + "\t" + tgt + "\t" + pred;
+//
+//    return all_pred;
 
 // UTILS
 // get a bing translation
