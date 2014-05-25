@@ -39,6 +39,15 @@ app.post('/upload', function(req, res){
       console.log('file upload');
       console.log(data);
     });
+
+
+    // to send a multipart http response
+//    res.write(target);
+//    setTimeout(function(){
+//      res.write(target);
+//      res.end();
+//    }, 5000);
+
 //    res.type('text/plain');
 //    res.send('Meadowlark Travel');
   });
@@ -207,8 +216,39 @@ app.get('/translate', function(req, res){
       res.send(data);
     }
   );
-
 });
+
+// paths which require chained calls
+app.get('/features', function(req, res){
+  // only get the translation if we don't have the target
+  var from = req.query.from
+    , to = req.query.to
+    , source = req.query.source
+    , target = req.query.target;
+
+  if (target) {
+
+    res.type('text/plain');
+    res.send('TARGET SUPPLIED');
+  } else {
+    var params = {
+      to: to,
+      from: from,
+      text: source
+    };
+    var trans = msTranslator.translate(params)
+    trans.then(function(target) {
+        // get the features
+
+        console.log("FEATURES: " + target);
+        res.type('text/plain');
+        res.send()
+    });
+
+  }
+  // TODO: get the source and target of the segment, calculate the features and send for prediction
+});
+
 
 // params
 //var params = {
@@ -233,8 +273,6 @@ app.get('/translate', function(req, res){
 
 // UTILS
 // get a bing translation
-
-
 
 app.use(function(req, res, next) {
   res.type('text/plain');

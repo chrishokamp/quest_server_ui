@@ -15,7 +15,7 @@ client.initialize_token(function(keys){
 });
 
 var translator = {
-  translate: function(params, callback) {
+  translate: function(params) {
     client.translate(params,
       function(err, data) {
         console.log(data);
@@ -26,6 +26,6 @@ var translator = {
     );
     return deferred.promise;
   }
-}
+};
 
 module.exports = translator;

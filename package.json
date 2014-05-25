@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "dependencies": {
     "formidable": "^1.0.14",
-    "express-logger": "0.0.3"
+    "express-logger": "0.0.3",
+    "xmlrpc": "^1.2.0"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
