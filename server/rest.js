@@ -213,9 +213,15 @@ app.get('/predict', function(req, res){
 //        return questClient.prediction(to, from, source, target);
 //      })
       .then(function(predictions) {
-        console.log("PREDICTIONS: " + predictions);
-        res.type('text/plain');
-        res.send(predictions)
+        // replace tabs with escaped newlines
+        var items = predictions.split(/\t/);
+        var output = {
+          source: items[0],
+          target: items[1],
+          prediction: items[2]
+        }
+        console.log("PREDICTIONS: " + output);
+        res.json(output);
       })
   }
 });

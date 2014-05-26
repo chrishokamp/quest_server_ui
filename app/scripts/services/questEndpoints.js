@@ -1,4 +1,4 @@
-angular.module('services').factory('Morphology', [ '$http','$log', function($http, $log) {
+angular.module('services').factory('questEndpoints', [ '$http','$log', function($http, $log) {
 
   // quest server express backend
   // functionalities
@@ -6,15 +6,38 @@ angular.module('services').factory('Morphology', [ '$http','$log', function($htt
   //
 
   // current quest XMLRPC endpoint
-  var routePrefix = 'http://143.167.8.76:35722';
+//   'http://143.167.8.76:35722';
+  // DEV MODE node endpoint
+  var routePrefix = 'http://0.0.0.0:3333/';
   var default_lang = 'en';
 
   return {
     // these functions return promises
     getFeatures: function(segment) {
-
-
 //      $http
+    },
+    getPrediction: function(from, to, source, target) {
+      var predictionRoute = routePrefix + 'predict'
+      $log.log('getting predictions for: ' + source);
+      if (target) {
+        $log.log('user supplied target');
+      } else {
+        var params = {
+          from: from,
+          to: to,
+          source: source,
+          target: target
+        };
+
+        // return a promise
+        var questPromise = $http({
+          url: predictionRoute,
+          method: 'GET',
+          params: params
+        });
+
+        return questPromise;
+      }
     }
 
 

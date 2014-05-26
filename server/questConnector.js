@@ -15,7 +15,7 @@ var questClient = {
   features: function(srcLang, targetLang, source, target) {
 
     var segPair = source + "\t" + target;
-    featureExtractor.methodCall('runQuest.getFeatures', [segPair], function (error, value) {
+    featureExtractor.methodCall('FEATURES: runQuest.getFeatures', [segPair], function (error, value) {
       if (error) {
         console.log(error);
         return error;
@@ -32,12 +32,13 @@ var questClient = {
 
 //    var segPair = "this is a test\tdies ist ein test";
     var segPair = source + '\t' + target;
+    console.log('seg pair: ' + segPair);
     featureExtractor.methodCall('runQuest.getPredictions', [segPair], function (error, value) {
       if (error) {
         console.log(error);
         return error;
       }
-      console.log('Quest returned: ' + value);
+      console.log('PREDICTIONS: Quest returned: ' + value);
       // should return:String all_pred =  src + "\t" + tgt + "\t" + pred;
       deferred.resolve(value);
     });
