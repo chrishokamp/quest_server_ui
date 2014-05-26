@@ -5,7 +5,6 @@ angular.module('services').factory('Morphology', [ '$http','$log', function($htt
   // translate(?)
   //
 
-
   // current quest XMLRPC endpoint
   var routePrefix = 'http://143.167.8.76:35722';
   var default_lang = 'en';

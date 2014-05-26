@@ -41,7 +41,6 @@ app.post('/upload', function(req, res){
       console.log(data);
     });
 
-
     // to send a multipart http response
 //    res.write(target);
 //    setTimeout(function(){
@@ -118,12 +117,13 @@ app.get('/segment/:lang', function(req, res){
   res.send('Meadowlark Travel');
 });
 
+// node mstranslator params
 //var params = {
 //  text: 'How\'s it going?'
 //  , from: 'en'
 //  , to: 'es'
 //};
-//req.query.color
+// sample call
 // http://localhost:3333/translate?from=en&to=de&text=I%20want%20to%20go%20home
 // working - return a promise
 app.get('/translate', function(req, res){
@@ -178,8 +178,6 @@ app.get('/features', function(req, res){
   // TODO: get the source and target of the segment, calculate the features and send for prediction
 });
 
-// for hosting the app using express
-// app.use(gzippo.staticGzip("" + __dirname + "/dist"));
 
 // /predict (can use chained promise(?), because it uses the features from the /feature route
 // paths which require chained calls
@@ -204,50 +202,26 @@ app.get('/predict', function(req, res){
     trans
       .then(function(target) {
         // get the prediction directly
-        // TODO: change the signature so that the backend exposes the ml component directly
-        return questClient.features(to, from, source, target);
+        // TODO: change the signature so that the backend exposes the ml component
+        // TODO: prediction cannot be chained with feature extraction yet
+        //return questClient.features(to, from, source, target);
+        return questClient.prediction(to, from, source, target);
       })
-     .then(function(features) {
-        console.log("FEATURES: " + features);
-
+//      .then(function(features) {
+//        console.log("FEATURES: " + features);
+//
+//        return questClient.prediction(to, from, source, target);
+//      })
+      .then(function(predictions) {
+        console.log("PREDICTIONS: " + predictions);
         res.type('text/plain');
-        res.send(features)
-     })
+        res.send(predictions)
+      })
   }
-  // TODO: get the source and target of the segment, calculate the features and send for prediction
 });
 
-//     String l_src = getsrcLanguage();
-//
-//        ClientQuEst client = null;
-//        ClientLearn learn = null;
-//        int qcp = Integer.parseInt(resourceManager.getString("quest.port"));
-//        int qlp = Integer.parseInt(resourceManager.getString("learn.port"));
-//
-//
-//        if (l_src.equals("de")){
-//             client = new ClientQuEst("localhost", 7773, false);
-//             learn = new ClientLearn("localhost", 7774, false);
-//        }else if (l_src.equals(Language.FRENCH)) {
-//            client = new ClientQuEst("localhost", 8883, false);
-//            learn = new ClientLearn("localhost", 8884, false);
-//        }else{
-//            System.out.println("Language not supported");
-//            return 0;
-//        }
-//
-//
-//        //ClientQuEst client = new ClientQuEst("localhost", 7773, false);
-//        String m = client.getFeatures(src, tgt);
-//
-//        double pred = learn.getPredictions(m);
-//
-//        String all_pred =  src + "\t" + tgt + "\t" + pred;
-//
-//    return all_pred;
-
-// UTILS
-// get a bing translation
+// for hosting the app using express
+// app.use(gzippo.staticGzip("" + __dirname + "/dist"));
 
 app.use(function(req, res, next) {
   res.type('text/plain');
