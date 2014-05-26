@@ -20,6 +20,19 @@ params.extend(app);
 
 app.use(logger({path: "logfile.txt"}));
 
+//app.use(function(req, res, next) {
+//  res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+//  next();
+//});
+
+// middleware to stop caching
+function nocache(req, res, next) {
+  res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+  res.header('Expires', '-1');
+  res.header('Pragma', 'no-cache');
+  next();
+}
+
 // set a global timeout
 //var timeout = connectTimeout({ time: 10000 });
 //app.use(timeout);
@@ -175,7 +188,6 @@ app.get('/features', function(req, res){
         res.send(features)
      })
   }
-  // TODO: get the source and target of the segment, calculate the features and send for prediction
 });
 
 
@@ -198,14 +210,17 @@ app.get('/predict', function(req, res){
       from: from,
       text: source
     };
-    var trans = msTranslator.translate(params)
+    console.log('current params: ');
+    console.log(params);
+    var trans = msTranslator.translate(params);
     trans
-      .then(function(target) {
+      .then(function(translation) {
+        console.log("PREDICT: trans promise resolves with: " + translation)
         // get the prediction directly
         // TODO: change the signature so that the backend exposes the ml component
         // TODO: prediction cannot be chained with feature extraction yet
         //return questClient.features(to, from, source, target);
-        return questClient.prediction(to, from, source, target);
+        return questClient.prediction(to, from, source, translation);
       })
 //      .then(function(features) {
 //        console.log("FEATURES: " + features);
@@ -213,6 +228,7 @@ app.get('/predict', function(req, res){
 //        return questClient.prediction(to, from, source, target);
 //      })
       .then(function(predictions) {
+        console.log('prediction promise resolves with: ' + predictions);
         // replace tabs with escaped newlines
         var items = predictions.split(/\t/);
         var output = {

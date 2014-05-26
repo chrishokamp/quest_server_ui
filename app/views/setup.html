@@ -164,7 +164,10 @@
                     <hr/>
                     <h4>Result</h4>
                     <hr/>
-                    <p>{{ result }}</p>
+                    <div class="loading-indicator" ng-show="loading">
+                        <i class="icon ion-loading-c"></i>
+                    </div>
+                    <p ng-show="!loading">{{ result }}</p>
                 </div>
             </tab>
         </tabset>

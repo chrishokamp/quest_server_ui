@@ -1,7 +1,6 @@
 var q = require('q')
   , xmlrpc = require('xmlrpc');
 
-var deferred = q.defer();
 
 // create an XML-RPC client for feature extraction, and another for the ML predictions
 // make the XML-RPC calls.
@@ -14,6 +13,7 @@ var predictor = xmlrpc.createClient({ host: '143.167.8.76', port: 35722, path: '
 var questClient = {
   features: function(srcLang, targetLang, source, target) {
 
+    var deferred = q.defer();
     var segPair = source + "\t" + target;
     featureExtractor.methodCall('FEATURES: runQuest.getFeatures', [segPair], function (error, value) {
       if (error) {
@@ -29,10 +29,10 @@ var questClient = {
   // TODO: prediction cannot be chained with feature extraction yet
   // the Java implementation of predict() doesn't allow this
   prediction: function(srcLang, targetLang, source, target) {
-
+    var deferred = q.defer();
 //    var segPair = "this is a test\tdies ist ein test";
     var segPair = source + '\t' + target;
-    console.log('seg pair: ' + segPair);
+    console.log('PREDICTION: seg pair: ' + segPair);
     featureExtractor.methodCall('runQuest.getPredictions', [segPair], function (error, value) {
       if (error) {
         console.log(error);

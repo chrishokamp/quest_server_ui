@@ -33,7 +33,8 @@ angular.module('services').factory('questEndpoints', [ '$http','$log', function(
         var questPromise = $http({
           url: predictionRoute,
           method: 'GET',
-          params: params
+          params: params,
+          cache: false
         });
 
         return questPromise;
