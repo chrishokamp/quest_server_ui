@@ -8,10 +8,12 @@ var gzippo = require('gzippo')
   , logger = require('express-logger')
   , connectTimeout = require('connect-timeout')
   , formidable = require('formidable')
+  , NodeCache = require('node-cache')
   , msTranslator = require('./translate')
   , questClient = require('./questConnector')
   , app = express();
 
+var questCache = new NodeCache();
 
 app.use(bodyParser());
 app.use(cors());
@@ -37,7 +39,6 @@ function nocache(req, res, next) {
 //var timeout = connectTimeout({ time: 10000 });
 //app.use(timeout);
 //var longTimeout = connectTimeout({ time: 45000 });
-
 
 // APPLICATION ROUTES
 
@@ -194,6 +195,19 @@ app.get('/features', function(req, res){
 // /predict (can use chained promise(?), because it uses the features from the /feature route
 // paths which require chained calls
 app.get('/predict', function(req, res){
+  console.log('req url: ' + req.url);
+
+  var localUrl = req.url; // this will be the cache key
+  if (Object.keys(questCache.get(localUrl)).length !== 0) {
+    console.log('CACHED VALUE EXISTS');
+    var cachedValue = questCache.get(localUrl);
+    console.log(cachedValue);
+    var originalResult = JSON.parse(cachedValue[localUrl]);
+    console.log(originalResult);
+
+    res.json(originalResult);
+    return;
+  }
   // only get the translation if we don't have the target
   var from = req.query.from
     , to = req.query.to
@@ -205,6 +219,11 @@ app.get('/predict', function(req, res){
     res.send('TARGET SUPPLIED');
 
   } else {
+    // hash url
+//    if (questCache.get(urlHash) {
+//      return
+//    })
+
     var params = {
       to: to,
       from: from,
@@ -212,21 +231,26 @@ app.get('/predict', function(req, res){
     };
     console.log('current params: ');
     console.log(params);
+
+    var finalResult = {}; // we'll use this to hold all results of interest
     var trans = msTranslator.translate(params);
     trans
       .then(function(translation) {
         console.log("PREDICT: trans promise resolves with: " + translation)
+        finalResult.translation = translation;
         // get the prediction directly
         // TODO: change the signature so that the backend exposes the ml component
         // TODO: prediction cannot be chained with feature extraction yet
-        //return questClient.features(to, from, source, target);
-        return questClient.prediction(to, from, source, translation);
+        return questClient.features(to, from, source, translation);
       })
-//      .then(function(features) {
-//        console.log("FEATURES: " + features);
-//
-//        return questClient.prediction(to, from, source, target);
-//      })
+      .then(function(features) {
+        console.log("FEATURES: " + features);
+        // slice off the source and target
+        var justFeatures = features.split(/\t/).slice(2);
+
+        finalResult.features = justFeatures;
+        return questClient.prediction(to, from, source, finalResult.translation);
+      })
       .then(function(predictions) {
         console.log('prediction promise resolves with: ' + predictions);
         // replace tabs with escaped newlines
@@ -237,7 +261,10 @@ app.get('/predict', function(req, res){
           prediction: items[2]
         }
         console.log("PREDICTIONS: " + output);
-        res.json(output);
+        finalResult.prediction = output;
+        // put in the cache for next time
+        questCache.set(localUrl, JSON.stringify(finalResult));
+        res.json(finalResult);
       })
   }
 });

@@ -5,7 +5,8 @@ var q = require('q')
 // create an XML-RPC client for feature extraction, and another for the ML predictions
 // make the XML-RPC calls.
 var featureExtractor = xmlrpc.createClient({ host: '143.167.8.76', port: 35722, path: '/' });
-var predictor = xmlrpc.createClient({ host: '143.167.8.76', port: 35722, path: '/' });
+// TODO - enable when the Java server is updated
+//var predictor = xmlrpc.createClient({ host: '143.167.8.76', port: 35722, path: '/' });
 
 // Quest returns a tsv line - source<tab>target<tab>feature1<tab>feature2<tab>...
 // > Quest returned: this is a test	dies ist ein test	4.0	4.0	2.75	-13.90353...
@@ -15,7 +16,7 @@ var questClient = {
 
     var deferred = q.defer();
     var segPair = source + "\t" + target;
-    featureExtractor.methodCall('FEATURES: runQuest.getFeatures', [segPair], function (error, value) {
+    featureExtractor.methodCall('runQuest.getFeatures', [segPair], function (error, value) {
       if (error) {
         console.log(error);
         return error;
