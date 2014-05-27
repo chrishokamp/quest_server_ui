@@ -63,4 +63,16 @@ span.drop-text {
   margin: auto !important;
 }
 
+ul {
+  list-style-type: none;
+  li {
+    // for IE 9
+    list-style-type: none;
+    background-color: white;
+  }
+}
+
+//.result-text {
+//  font-size: large;
+//}
 

@@ -15,6 +15,8 @@ var gzippo = require('gzippo')
 
 var questCache = new NodeCache();
 
+app.use(gzippo.staticGzip("" + __dirname + "/../dist"));
+
 app.use(bodyParser());
 app.use(cors());
 app.set('port', 3333);
@@ -232,7 +234,9 @@ app.get('/predict', function(req, res){
     console.log('current params: ');
     console.log(params);
 
-    var finalResult = {}; // we'll use this to hold all results of interest
+    var finalResult = {
+      source: source
+    }; // we'll use this to hold all results of interest
     var trans = msTranslator.translate(params);
     trans
       .then(function(translation) {
@@ -245,23 +249,17 @@ app.get('/predict', function(req, res){
       })
       .then(function(features) {
         console.log("FEATURES: " + features);
-        // slice off the source and target
-        var justFeatures = features.split(/\t/).slice(2);
+        // slice off the source and target, pop off the trailing tab
+        var justFeatures = features.split(/\t/).slice(2, -1);
 
         finalResult.features = justFeatures;
         return questClient.prediction(to, from, source, finalResult.translation);
       })
       .then(function(predictions) {
         console.log('prediction promise resolves with: ' + predictions);
-        // replace tabs with escaped newlines
         var items = predictions.split(/\t/);
-        var output = {
-          source: items[0],
-          target: items[1],
-          prediction: items[2]
-        }
-        console.log("PREDICTIONS: " + output);
-        finalResult.prediction = output;
+        finalResult.prediction = items.slice(2);
+
         // put in the cache for next time
         questCache.set(localUrl, JSON.stringify(finalResult));
         res.json(finalResult);

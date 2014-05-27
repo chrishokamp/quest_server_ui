@@ -1,6 +1,6 @@
 angular.module('controllers')
-.controller('QueryCtrl', ['$scope', '$log', 'questEndpoints', function($scope, $log, questEndpoints) {
-  $scope.sourceQuery = 'dies ist ein Test Satz'
+.controller('QueryCtrl', ['$scope', '$log', 'questEndpoints', 'features', function($scope, $log, questEndpoints, features) {
+  $scope.sourceQuery = 'Er wohnt in Berlin';
 
   // working - make source lang and target lang properties on the parent controller
   $scope.askQuest = function(sourceQuery) {
@@ -13,7 +13,18 @@ angular.module('controllers')
         $log.log('the result from quest: ');
         $log.log(result);
         var resData = result.data;
-        $scope.result = resData;
+        // parse and map the features to their names
+        var featureValues = resData.features;
+        var featureList = featureValues.map(function(val, index) {
+          return [ features.allFeatures[index], val ];
+        });
+
+        $scope.result = {
+          source: resData.source,
+          target: resData.translation,
+          prediction: resData.prediction,
+          features: featureList
+        };
         $scope.loading = false;
 
       },

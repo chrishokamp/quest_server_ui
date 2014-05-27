@@ -53,6 +53,73 @@
     <div class="row">
 
         <tabset class="configuration-tabs">
+            <tab heading="Query">
+                <div class="container tab-box" ng-controller="QueryCtrl">
+                    <div class="row text-center">
+                        <h4>Query Quest</h4>
+                    </div>
+                    <hr/>
+                    <div class="row">
+                        <div class="col-xs-offset-1 col-xs-4 text-center">
+                            <label for="source-lang">Source Language</label>
+                            <select id="source-lang" class="form-control" name="source-lang">
+                                <option value="de">German</option>
+                                <option value="en" disabled="true">English</option>
+                                <option value="es" disabled="true">Spanish</option>
+
+                            </select>
+                        </div>
+                        <div class="col-xs-offset-2 col-xs-4 text-center">
+                            <label for="target-lang">Target Language</label>
+                            <select  id="target-lang" class="form-control" name="source-lang">
+                                <option value="en">English</option>
+                                <option value="es" disabled="true">Spanish</option>
+                                <option value="de" disabled="true">German</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <hr/>
+                    <div class="row text-center">
+                        <input class="col-xs-offset-2 input-lg col-xs-5" ng-model="sourceQuery" type="text"/>
+                        <button class="btn btn-lg btn-primary col-xs-2" ng-click="askQuest(sourceQuery)">Ask Quest</button>
+                    </div>
+                    <hr/>
+                    <div class="row text-center">
+                        <h4>Results</h4>
+                    </div>
+                    <hr/>
+                    <div class="row text-center">
+                        <div class="loading-indicator" ng-show="loading">
+                            <i class="icon ion-loading-c"></i>
+                        </div>
+                    </div>
+                    <div ng-show="!loading && result">
+
+                        <div class="row result-text text-center">
+                            <span class="text-primary">Source: </span>{{ result.source }}
+                        </div>
+                        <div class="row result-text text-center">
+                            <span class="text-primary">Target: </span>{{ result.target }}
+                        </div>
+                        <div style="padding-bottom: 10px" class="row result-text text-center">
+                            <span class="text-danger">Prediction: </span>{{ result.prediction[0] }}
+                        </div>
+                        <hr/>
+                        <h3>Features</h3>
+                        <ul>
+                            <li ng-repeat="feature in result.features">
+                                <div class="row text-center">
+                                    <span class="col-xs-6">{{ feature[0] }}</span>
+                                    <span class="col-xs-6">{{ feature[1] }}</span>
+                                </div>
+                                <hr/>
+                            </li>
+                        </ul>
+                        <!--<p ng-show="!loading">{{ result }}</p>-->
+                    </div>
+                </div>
+            </tab>
             <tab heading="Add File(s)">
                 <div class="container tab-box">
                     <div class="row">
@@ -155,23 +222,9 @@
                     <h4>Features</h4>
                 </div>
             </tab>
-            <tab heading="Query">
-                <div class="container tab-box" ng-controller="QueryCtrl">
-                    <h4>Query Quest</h4>
-                    <hr/>
-                    <input ng-model="sourceQuery" type="text"/>
-                    <button ng-click="askQuest(sourceQuery)">Ask Quest</button>
-                    <hr/>
-                    <h4>Result</h4>
-                    <hr/>
-                    <div class="loading-indicator" ng-show="loading">
-                        <i class="icon ion-loading-c"></i>
-                    </div>
-                    <p ng-show="!loading">{{ result }}</p>
-                </div>
-            </tab>
         </tabset>
     </div>
+
     <!--<div class="row text-center">-->
         <!--<button class="btn btn-lg btn-primary center">Upload</button>-->
     <!--</div>-->

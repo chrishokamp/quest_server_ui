@@ -8,7 +8,9 @@ angular.module('services').factory('questEndpoints', [ '$http','$log', function(
   // current quest XMLRPC endpoint
 //   'http://143.167.8.76:35722';
   // DEV MODE node endpoint
-  var routePrefix = 'http://0.0.0.0:3333/';
+//  var routePrefix = 'http://0.0.0.0:3333';
+  // relative endpoint
+  var routePrefix = '';
   var default_lang = 'en';
 
   return {
@@ -17,7 +19,8 @@ angular.module('services').factory('questEndpoints', [ '$http','$log', function(
 //      $http
     },
     getPrediction: function(from, to, source, target) {
-      var predictionRoute = routePrefix + 'predict'
+      var predictionRoute = routePrefix + '/predict'
+      $log.log('predictionRoute is:' + predictionRoute);
       $log.log('getting predictions for: ' + source);
       if (target) {
         $log.log('user supplied target');
