@@ -8,15 +8,15 @@ angular.module('services').factory('questEndpoints', [ '$http','$log', function(
   // current quest XMLRPC endpoint
 //   'http://143.167.8.76:35722';
   // DEV MODE node endpoint
-//  var routePrefix = 'http://0.0.0.0:3333';
+  var routePrefix = 'http://0.0.0.0:3333';
   // relative endpoint
-  var routePrefix = '';
+//  var routePrefix = '';
   var default_lang = 'en';
 
   return {
     // these functions return promises
     getFeatures: function(segment) {
-//      $http
+
     },
     getPrediction: function(from, to, source, target) {
       var predictionRoute = routePrefix + '/predict'
