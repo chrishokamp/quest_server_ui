@@ -2,10 +2,6 @@ angular.module('controllers')
 .controller('QueryCtrl', ['$scope', '$log', 'questEndpoints', 'features', function($scope, $log, questEndpoints, features) {
   // default query
   $scope.sourceQuery = 'Er wohnt in Berlin';
-  $scope.langs = [
-    { name: 'German'},
-    { name: 'French'}
-  ];
 
   var langCodes = {
     'German': 'de',
